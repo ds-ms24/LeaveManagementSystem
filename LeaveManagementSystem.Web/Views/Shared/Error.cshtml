@@ -1,0 +1,27 @@
+﻿@model ErrorViewModel // C# code defining the model
+@{
+    ViewData["Title"] = "Error"; // C# code defining the view data title
+}
+
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+@if (Model.ShowRequestId) // razor syntax as we see a C# if statement inside our HTML file. (usually seen only in JavaScript)
+{   // C# code making a decision as to whether or not it should show a bit of HTML and that is how we make a page dynamic.
+    // @if Model (referring to @model) has to be the same datatype as what we have up top. 
+    // from there we can access the data (.ShowRequestId) that would have been sent.
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>   
+    </p>
+}
+
+<h3>Development Mode</h3>
+<p>
+    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
+</p>
+<p>
+    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
+    It can result in displaying sensitive information from exceptions to end users.
+    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
+    and restarting the app.
+</p>
