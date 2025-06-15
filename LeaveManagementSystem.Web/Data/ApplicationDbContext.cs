@@ -9,14 +9,6 @@ namespace LeaveManagementSystem.Web.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-        }
-
-        //protected readonly IConfiguration Configuration;
-
-        //public ApplicationDbContext(IConfiguration configuration)
-        //{
-        //    Configuration = configuration;
-        //}
-
+        }   
     }
 }
