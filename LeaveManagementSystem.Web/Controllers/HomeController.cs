@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using LeaveManagementSystem.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace LeaveManagementSystem.Web.Controllers
 {
@@ -25,10 +25,10 @@ namespace LeaveManagementSystem.Web.Controllers
         {
             return View();
         }
-              
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
-        {   
+        {
             // queries
             // calculations
 
@@ -37,7 +37,7 @@ namespace LeaveManagementSystem.Web.Controllers
             // proper naming conventions tells me that this is a ViewModel class designed for a page called Error.
 
             // Ultimately the Action is preparing this data, or an object of this class as data to be returned with the view.
-                       
+
         }
     }
 }

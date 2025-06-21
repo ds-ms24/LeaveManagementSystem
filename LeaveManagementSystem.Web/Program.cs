@@ -39,9 +39,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-    // the default routing configuration is looking at the pattern where the controller is going to have a name and then we look for that action.
-    // Index is set to default homepage template
-    // dont touch this if you dont need to
+// the default routing configuration is looking at the pattern where the controller is going to have a name and then we look for that action.
+// Index is set to default homepage template
+// dont touch this if you dont need to
 app.MapRazorPages();
 
 app.Run();

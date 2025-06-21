@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LeaveManagementSystem.Web.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LeaveManagementSystem.Web.Data;
 
 namespace LeaveManagementSystem.Web.Controllers
 {
@@ -20,7 +15,7 @@ namespace LeaveManagementSystem.Web.Controllers
 
         // GET: LeaveTypes
         public async Task<IActionResult> Index()
-        {   
+        {
             // var data = SELECT * FROM LeaveTypes
             var data = await _context.LeaveTypes.ToListAsync();
             return View(data);
