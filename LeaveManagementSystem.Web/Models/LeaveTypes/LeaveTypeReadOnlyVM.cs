@@ -1,10 +1,9 @@
-﻿namespace LeaveManagementSystem.Web.Data
+﻿namespace LeaveManagementSystem.Web.Models.LeaveTypes
 {
-    public class LeaveType
+    public class LeaveTypeReadOnlyVM
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int NumberOfDays { get; set; }
-
     }
 }
