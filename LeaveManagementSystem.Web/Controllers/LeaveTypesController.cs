@@ -7,17 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagementSystem.Web.Controllers
 {
-    public class LeaveTypesController(ILeaveTypesService leaveTypesService) : Controller
+    public class LeaveTypesController(ILeaveTypesService _leaveTypesService) : Controller
     {
         private const string NameExistsValidationMessage = "This leave type already exists in the database";
-        private readonly ILeaveTypesService _leaveTypesService = leaveTypesService;
-
-
+        //below is not necessary
+        //private readonly ILeaveTypesService _leaveTypesService = leaveTypesService;
 
         // GET: LeaveTypes
         public async Task<IActionResult> Index()
         {
-            var viewData = await _leaveTypesService.GetAll();
+            var viewData = await _leaveTypesService.GetAll(); 
             return View(viewData);
         }
 
