@@ -1,0 +1,80 @@
+﻿using AutoMapper;
+using LeaveManagementSystem.Web.Data;
+using LeaveManagementSystem.Web.Models.LeaveTypes;
+using Microsoft.EntityFrameworkCore;
+
+namespace LeaveManagementSystem.Web.Services;
+
+public class LeaveTypesService(ApplicationDbContext context, IMapper mapper) : ILeaveTypesService
+{
+    private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
+
+    public async Task<List<LeaveTypeReadOnlyVM>> GetAll()
+    {
+        // var data = SELECT * FROM LeaveTypes
+        var data = await _context.LeaveTypes.ToListAsync();
+        // convert the data model into a view model - Use AutoMapper
+        var viewData = _mapper.Map<List<LeaveTypeReadOnlyVM>>(data);
+        return viewData;
+    }
+
+    public async Task<T?> Get<T>(int id) where T : class
+    {
+        var data = await _context.LeaveTypes.FirstOrDefaultAsync(x => x.Id == id);
+        if (data == null)
+        {
+            return null;
+        }
+
+        var viewData = _mapper.Map<T>(data);
+        return viewData;
+    }
+
+    public async Task Remove(int id)
+    {
+        var data = await _context.LeaveTypes.FirstOrDefaultAsync(x => x.Id == id);
+        if (data != null)
+        {
+            _context.Remove(data);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task Edit(LeaveTypeEditVM model)
+    {
+        //var leavetype equal to get the mapping from the edit view model then update and save changes.
+        var leaveType = _mapper.Map<LeaveType>(model);
+        _context.Update(leaveType);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task Create(LeaveTypeCreateVM model)
+    {
+        //var leavetype is equal to the mapped version of this model data that came over in the create parameter.
+        var leaveType = _mapper.Map<LeaveType>(model);
+        //add it
+        _context.Add(leaveType);
+        //save changes
+        await _context.SaveChangesAsync();
+    }
+
+
+    private bool LeaveTypeExists(int id)
+    {
+        return _context.LeaveTypes.Any(e => e.Id == id);
+    }
+
+    private async Task<bool> CheckIfLeaveTypeNameExistsAsync(string name)
+    {
+        var lowercaseName = name.ToLower();
+        return await _context.LeaveTypes.AnyAsync(q => q.Name.ToLower().Equals(lowercaseName));
+    }
+
+    private async Task<bool> CheckIfLeaveTypeNameExistsForEdit(LeaveTypeEditVM leaveTypeEdit)
+    {
+        var lowercaseName = leaveTypeEdit.Name.ToLower();
+        return await _context.LeaveTypes.AnyAsync(q => q.Name.ToLower().Equals(lowercaseName)
+            && q.Id != leaveTypeEdit.Id);
+    }
+}
