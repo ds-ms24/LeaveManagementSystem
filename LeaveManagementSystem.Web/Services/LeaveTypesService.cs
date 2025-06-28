@@ -60,18 +60,18 @@ public class LeaveTypesService(ApplicationDbContext context, IMapper mapper) : I
     }
 
 
-    private bool LeaveTypeExists(int id)
+    public bool LeaveTypeExists(int id)
     {
         return _context.LeaveTypes.Any(e => e.Id == id);
     }
 
-    private async Task<bool> CheckIfLeaveTypeNameExistsAsync(string name)
+    public async Task<bool> CheckIfLeaveTypeNameExistsAsync(string name)
     {
         var lowercaseName = name.ToLower();
         return await _context.LeaveTypes.AnyAsync(q => q.Name.ToLower().Equals(lowercaseName));
     }
 
-    private async Task<bool> CheckIfLeaveTypeNameExistsForEdit(LeaveTypeEditVM leaveTypeEdit)
+    public async Task<bool> CheckIfLeaveTypeNameExistsForEdit(LeaveTypeEditVM leaveTypeEdit)
     {
         var lowercaseName = leaveTypeEdit.Name.ToLower();
         return await _context.LeaveTypes.AnyAsync(q => q.Name.ToLower().Equals(lowercaseName)
