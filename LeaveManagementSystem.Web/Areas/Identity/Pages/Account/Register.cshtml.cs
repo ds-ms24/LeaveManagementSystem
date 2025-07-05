@@ -2,11 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using Microsoft.EntityFrameworkCore;
+
 namespace LeaveManagementSystem.Web.Areas.Identity.Pages.Account;
 
 public class RegisterModel : PageModel
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserStore<ApplicationUser> _userStore;
     private readonly IUserEmailStore<ApplicationUser> _emailStore;
@@ -17,6 +20,7 @@ public class RegisterModel : PageModel
         UserManager<ApplicationUser> userManager,
         IUserStore<ApplicationUser> userStore,
         SignInManager<ApplicationUser> signInManager,
+        RoleManager<IdentityRole> roleManager,
         ILogger<RegisterModel> logger,
         IEmailSender emailSender)
     {
@@ -24,6 +28,7 @@ public class RegisterModel : PageModel
         _userStore = userStore;
         _emailStore = GetEmailStore();
         _signInManager = signInManager;
+        this._roleManager = roleManager;
         _logger = logger;
         _emailSender = emailSender;
     }
@@ -33,7 +38,9 @@ public class RegisterModel : PageModel
     ///     directly from your code. This API may change or be removed in future releases.
     /// </summary>
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = new InputModel();
+
+    public string[] RoleNames { get; set; }
 
     /// <summary>
     ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -71,7 +78,7 @@ public class RegisterModel : PageModel
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
-
+                
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -80,6 +87,26 @@ public class RegisterModel : PageModel
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        [Display(Name = "Date Of Birth")]
+        public DateOnly DateOfBirth { get; set; }
+
+        [Required]
+        public string RoleName { get; set; }
+        
+
     }
 
 
@@ -87,6 +114,11 @@ public class RegisterModel : PageModel
     {
         ReturnUrl = returnUrl;
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        var roles = await _roleManager.Roles
+            .Select(q => q.Name)
+            .Where(q => q != "Administrator")
+            .ToArrayAsync();
+        RoleNames = roles;
     }
 
     public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -99,13 +131,27 @@ public class RegisterModel : PageModel
 
             await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+            user.DateOfBirth = Input.DateOfBirth;
+            user.FirstName = Input.FirstName;
+            user.LastName = Input.LastName;
+
+
             var result = await _userManager.CreateAsync(user, Input.Password);
 
             if (result.Succeeded)
             {
                 _logger.LogInformation("User created a new account with password.");
+                
+                if (Input.RoleName == "Supervisor")
+                {
+                    await _userManager.AddToRolesAsync(user, ["Employee", "Supervisor"]);
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(user, "Employee");
+                }
 
-                var userId = await _userManager.GetUserIdAsync(user);
+                    var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = Url.Page(
@@ -134,6 +180,11 @@ public class RegisterModel : PageModel
         }
 
         // If we got this far, something failed, redisplay form
+        var roles = await _roleManager.Roles
+            .Select(q => q.Name)
+            .Where(q => q != "Administrator")
+            .ToArrayAsync();
+        RoleNames = roles;
         return Page();
     }
 
