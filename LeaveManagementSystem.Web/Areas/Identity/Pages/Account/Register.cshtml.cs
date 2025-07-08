@@ -141,14 +141,14 @@ public class RegisterModel : PageModel
             if (result.Succeeded)
             {
                 _logger.LogInformation("User created a new account with password.");
-                
-                if (Input.RoleName == "Supervisor")
+
+                if (Input.RoleName == Roles.Supervisor)
                 {
-                    await _userManager.AddToRolesAsync(user, ["Employee", "Supervisor"]);
+                    await _userManager.AddToRolesAsync(user, [Roles.Employee, Roles.Supervisor]);
                 }
                 else
                 {
-                    await _userManager.AddToRoleAsync(user, "Employee");
+                    await _userManager.AddToRoleAsync(user, Roles.Employee);
                 }
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -182,7 +182,7 @@ public class RegisterModel : PageModel
         // If we got this far, something failed, redisplay form
         var roles = await _roleManager.Roles
             .Select(q => q.Name)
-            .Where(q => q != "Administrator")
+            .Where(q => q != Roles.Administrator)
             .ToArrayAsync();
         RoleNames = roles;
         return Page();

@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using LeaveManagementSystem.Web.Data;
-using LeaveManagementSystem.Web.Models.LeaveTypes;
+﻿using LeaveManagementSystem.Web.Models.LeaveTypes;
 using LeaveManagementSystem.Web.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagementSystem.Web.Controllers
 {
+    [Authorize(Roles = Roles.Administrator)]
     public class LeaveTypesController(ILeaveTypesService _leaveTypesService) : Controller
     {
         private const string NameExistsValidationMessage = "This leave type already exists in the database";
@@ -16,7 +14,7 @@ namespace LeaveManagementSystem.Web.Controllers
         // GET: LeaveTypes
         public async Task<IActionResult> Index()
         {
-            var viewData = await _leaveTypesService.GetAll(); 
+            var viewData = await _leaveTypesService.GetAll();
             return View(viewData);
         }
 
@@ -64,7 +62,7 @@ namespace LeaveManagementSystem.Web.Controllers
             }
             return View(leaveTypeCreate);
         }
-                
+
         // GET: LeaveTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -72,14 +70,14 @@ namespace LeaveManagementSystem.Web.Controllers
             {
                 return NotFound();
             }
-            
+
             var leaveType = await _leaveTypesService.Get<LeaveTypeEditVM>(id.Value);
             if (leaveType == null)
             {
                 return NotFound();
             }
             return View(leaveType);
-            
+
         }
 
         // POST: LeaveTypes/Edit/5
@@ -88,12 +86,12 @@ namespace LeaveManagementSystem.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, LeaveTypeEditVM leaveTypeEdit)
-        {   
+        {
             if (id != leaveTypeEdit.Id)
             {
                 return NotFound();
             }
-            
+
             // Adding custom validation and model state error
             if (await _leaveTypesService.CheckIfLeaveTypeNameExistsForEdit(leaveTypeEdit))
             {
@@ -120,7 +118,7 @@ namespace LeaveManagementSystem.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(leaveTypeEdit);
-        }    
+        }
 
         // GET: LeaveTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -145,6 +143,6 @@ namespace LeaveManagementSystem.Web.Controllers
         {
             await _leaveTypesService.Remove(id);
             return RedirectToAction(nameof(Index));
-        }             
+        }
     }
 }
