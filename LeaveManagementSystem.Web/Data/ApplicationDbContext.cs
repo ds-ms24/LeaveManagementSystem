@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagementSystem.Web.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser> // this defines the class
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+        //access modifier - class type - class name - inherits from - base class with <user type>
     {
-        // this is the constructor:
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
+        //access modifier - constructor - parameter type<parameter type> - parameter name - base constructor call
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -62,7 +63,16 @@ namespace LeaveManagementSystem.Web.Data
                     UserId = "8d513918-4fde-4d68-9645-bbbb77dbcb19"
                 });
         }
+        //access modifier - method modifier - return type - method name - parameter type - parameter name
 
         public DbSet<LeaveType> LeaveTypes { get; set; }
+        //access modifier - property type <entity set> - property name - read - assign
+
+        public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
+        //access modifier - property type <entity set> - property name - read - assign
+
+        public DbSet<Period> Periods { get; set; }
+        //access modifier - property type <entity set> - property name - read - assign
+
     }
 }
