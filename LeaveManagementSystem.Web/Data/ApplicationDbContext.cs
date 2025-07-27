@@ -74,5 +74,8 @@ namespace LeaveManagementSystem.Web.Data
         public DbSet<Period> Periods { get; set; }
         //access modifier - property type <entity set> - property name - read - assign
 
+        public DbSet<LeaveRequestStatus> LeaveRequestStatuses { get; set; }
+
+        public DbSet<LeaveRequest> LeaveRequests { get; set; }
     }
 }
