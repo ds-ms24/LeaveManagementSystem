@@ -1,5 +1,9 @@
-﻿namespace LeaveManagementSystem.Web.Data
+﻿using LeaveManagementSystem.Web.Data.Configurations;
+using Microsoft.EntityFrameworkCore;
+
+namespace LeaveManagementSystem.Web.Data
 {
+    
     public class LeaveRequestStatus : BaseEntity
     {
         [StringLength (50)]
