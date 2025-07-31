@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LeaveManagementSystem.Web.Models.LeaveRequests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LeaveManagementSystem.Web.Controllers;
 
@@ -19,7 +20,7 @@ public class LeaveRequestsController : Controller
 
     // Employee Create reqests
     [HttpPost]
-    public async Task<IActionResult> Create(int create /*Use VM*/)
+    public async Task<IActionResult> Create(LeaveRequestCreateVM model)
     {
         return View();
     }

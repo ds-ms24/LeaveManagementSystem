@@ -2,7 +2,7 @@
 
 namespace LeaveManagementSystem.Web.Models.LeaveRequests
 {
-    internal class EmployeeLeaveRequestListVM
+    public class EmployeeLeaveRequestListVM
     {
     }
 }

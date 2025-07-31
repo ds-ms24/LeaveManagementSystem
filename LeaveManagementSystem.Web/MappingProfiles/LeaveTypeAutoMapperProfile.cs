@@ -14,7 +14,7 @@ namespace LeaveManagementSystem.Web.MappingProfiles
             CreateMap<LeaveTypeCreateVM, LeaveType>();
 
             CreateMap<LeaveTypeEditVM, LeaveType>().ReverseMap();
-                        
+
         }
     }
 }

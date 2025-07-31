@@ -12,7 +12,7 @@
         public int LeaveRequestStatusId { get; set; }
 
         public ApplicationUser? Employee { get; set; }
-        public string EmployeeId { get; set; }
+        public string EmployeeId { get; set; } 
 
         public ApplicationUser? Reviewer { get; set; }
         public string? ReviewerId { get; set; }
