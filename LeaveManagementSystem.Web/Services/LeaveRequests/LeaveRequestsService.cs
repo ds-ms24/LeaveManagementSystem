@@ -1,17 +1,41 @@
-﻿using LeaveManagementSystem.Web.Models.LeaveRequests;
+﻿using AutoMapper;
+using LeaveManagementSystem.Web.Models.LeaveRequests;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagementSystem.Web.Services.LeaveRequests;
 
-public class LeaveRequestsService : ILeaveRequestsService
+public class LeaveRequestsService(IMapper _mapper, UserManager<ApplicationUser> _userManager, 
+    IHttpContextAccessor _httpContextAccessor, ApplicationDbContext _context) : ILeaveRequestsService
 {
     public Task CancelLeaveRequest(int leaveRequestId)
     {
         throw new NotImplementedException();
     }
 
-    Task ILeaveRequestsService.CreateLeaveRequest(LeaveRequestCreateVM model)
+    public async Task CreateLeaveRequest(LeaveRequestCreateVM model)
     {
-        throw new NotImplementedException();
+        // map data to leave request data model
+        var leaveRequest = _mapper.Map<LeaveRequest>(model);
+
+        // get logged in employee id 
+        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
+        leaveRequest.EmployeeId = user.Id;
+
+        // set LeaveRequestStatusId to pending
+        leaveRequest.LeaveRequestStatusId = (int)LeaveRequestStatus.Pending;
+
+        // save leave request
+        _context.Add(leaveRequest);
+
+        // deduct allocation days based on request
+        var numberOfDays = model.EndDate.DayNumber - model.StartDate.DayNumber;
+        var allocationToDeduct = await _context.LeaveAllocations
+            .FirstAsync(q => q.LeaveTypeId == model.LeaveTypeId && q.EmployeeId == user.Id);
+
+        allocationToDeduct.Days =- numberOfDays;
+
+        await _context.SaveChangesAsync();
     }
 
     Task<LeaveRequestListVM> ILeaveRequestsService.GetAllLeaveRequests()

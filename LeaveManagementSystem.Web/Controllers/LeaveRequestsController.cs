@@ -1,4 +1,5 @@
 ﻿using LeaveManagementSystem.Web.Models.LeaveRequests;
+using LeaveManagementSystem.Web.Services.LeaveRequests;
 using LeaveManagementSystem.Web.Services.LeaveTypes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,7 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace LeaveManagementSystem.Web.Controllers;
 
 [Authorize]
-public class LeaveRequestsController(ILeaveTypesService _leaveTypesService) : Controller
+public class LeaveRequestsController(ILeaveTypesService _leaveTypesService, 
+    ILeaveRequestsService _leaveRequestsService) : Controller
 {
     // Employee View requests
     public async Task<IActionResult> Index()
@@ -14,7 +16,7 @@ public class LeaveRequestsController(ILeaveTypesService _leaveTypesService) : Co
         return View();
     }
 
-    // Employee Create reqests
+    // Employee Create requests
     public async Task<IActionResult> Create()
     {
         var leaveTypes = await _leaveTypesService.GetAll();
@@ -28,34 +30,44 @@ public class LeaveRequestsController(ILeaveTypesService _leaveTypesService) : Co
         return View(model);
     }
 
-    // Employee Create reqests
+    // Employee Create requests
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(LeaveRequestCreateVM model)
-    {
-        return View();
+    {   
+        if (ModelState.IsValid)
+        {
+            await _leaveRequestsService.CreateLeaveRequest(model);
+        }
+
+        var leaveTypes = await _leaveTypesService.GetAll();
+        model.LeaveTypes = new SelectList(leaveTypes, "Id", "Name");
+        return View(model);
     }
 
-    // Employee Cancel reqests
+    // Employee Cancel requests
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Cancel(int leaveRequestId)
     {
         return View();
     }
 
-    // Admin/Supe review reqests
+    // Admin/Supervisor review requests
     public async Task<IActionResult> ListRequests()
     {
         return View();
     }
 
-    // Admin/Supe review reqests
+    // Admin/Supe review requests
     public async Task<IActionResult> Review(int leaveRequestId)
     {
         return View();
     }
 
-    // Admin/Supe review reqests
+    // Admin/Supervisor review requests
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Review(/*Use VM*/)
     {
         return View();
