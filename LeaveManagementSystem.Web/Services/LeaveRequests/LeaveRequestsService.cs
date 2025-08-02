@@ -38,17 +38,27 @@ public class LeaveRequestsService(IMapper _mapper, UserManager<ApplicationUser> 
         await _context.SaveChangesAsync();
     }
 
-    Task<LeaveRequestListVM> ILeaveRequestsService.GetAllLeaveRequests()
+    public Task<LeaveRequestListVM> GetAllLeaveRequests()
     {
         throw new NotImplementedException();
     }
 
-    Task<EmployeeLeaveRequestListVM> ILeaveRequestsService.GetEmployeeLeaveRequests()
+    public Task<EmployeeLeaveRequestListVM> GetEmployeeLeaveRequests()
     {
         throw new NotImplementedException();
     }
 
-    Task ILeaveRequestsService.ReviewLeaveRequest(ReviewLeaveRequestVM model)
+    public async Task<bool> RequestDatesExceedAllocation(LeaveRequestCreateVM model)
+    {
+        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
+        var numberOfDays = model.EndDate.DayNumber - model.StartDate.DayNumber;
+        var allocation = await _context.LeaveAllocations
+            .FirstAsync(q => q.LeaveTypeId == model.LeaveTypeId && q.EmployeeId == user.Id);
+
+        return allocation.Days < numberOfDays;
+    }
+
+    public Task ReviewLeaveRequest(ReviewLeaveRequestVM model)
     {
         throw new NotImplementedException();
     }
