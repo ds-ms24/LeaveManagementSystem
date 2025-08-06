@@ -23,7 +23,7 @@ public class LeaveRequestsService(IMapper _mapper, UserManager<ApplicationUser> 
         leaveRequest.EmployeeId = user.Id;
 
         // set LeaveRequestStatusId to pending
-        leaveRequest.LeaveRequestStatusId = (int)LeaveRequestStatus.Pending;
+        leaveRequest.LeaveRequestStatusId = (int)LeaveRequestStatusEnum.Pending;
 
         // save leave request
         _context.Add(leaveRequest);
