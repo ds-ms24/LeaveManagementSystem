@@ -45,6 +45,7 @@ public class LeaveRequestsController(ILeaveTypesService _leaveTypesService,
         if (ModelState.IsValid)
         {
             await _leaveRequestsService.CreateLeaveRequest(model);
+            return RedirectToAction(nameof(Index));
         }
 
         var leaveTypes = await _leaveTypesService.GetAll();
