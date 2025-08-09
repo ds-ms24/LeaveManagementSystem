@@ -57,9 +57,10 @@ public class LeaveRequestsController(ILeaveTypesService _leaveTypesService,
     // Employee Cancel requests
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Cancel(int leaveRequestId)
+    public async Task<IActionResult> Cancel(int id)
     {
-        return View();
+        await _leaveRequestsService.CancelLeaveRequest(id);
+        return RedirectToAction(nameof(Index));
     }
 
     // Admin/Supervisor review requests
