@@ -66,7 +66,8 @@ public class LeaveRequestsController(ILeaveTypesService _leaveTypesService,
     // Admin/Supervisor review requests
     public async Task<IActionResult> ListRequests()
     {
-        return View();
+        var model = _leaveRequestsService.AdminGetAllLeaveRequests();
+        return View(model);
     }
 
     // Admin/Supe review requests
