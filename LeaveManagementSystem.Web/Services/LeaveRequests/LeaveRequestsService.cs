@@ -114,9 +114,25 @@ public class LeaveRequestsService(IMapper _mapper, UserManager<ApplicationUser> 
         return allocation.Days < numberOfDays;
     }
 
-    public Task ReviewLeaveRequest(ReviewLeaveRequestVM model)
+    public async Task ReviewLeaveRequest(int leaveRequestId, bool approved)
     {
-        throw new NotImplementedException();
+        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
+        var leaveRequest = await _context.LeaveRequests.FindAsync(leaveRequestId);
+        leaveRequest.LeaveRequestStatusId = approved
+            ? (int)LeaveRequestStatusEnum.Approved
+            : (int)LeaveRequestStatusEnum.Declined;
+
+        leaveRequest.ReviewerId = user.Id;
+
+        if (!approved)
+        {
+            var allocation = await _context.LeaveAllocations
+            .FirstAsync(q => q.LeaveTypeId == leaveRequest.LeaveTypeId && q.EmployeeId == leaveRequest.EmployeeId);
+            var numberOfDays = leaveRequest.EndDate.DayNumber - leaveRequest.StartDate.DayNumber;
+            allocation.Days += numberOfDays;
+        }
+
+        await _context.SaveChangesAsync();
     }
 
     public async Task<ReviewLeaveRequestVM> GetLeaveRequestForReview(int id)
@@ -134,6 +150,7 @@ public class LeaveRequestsService(IMapper _mapper, UserManager<ApplicationUser> 
             LeaveRequestStatus = (LeaveRequestStatusEnum)leaveRequest.LeaveRequestStatusId,
             Id = leaveRequest.Id,
             LeaveType = leaveRequest.LeaveType.Name,
+            RequestComments = leaveRequest.RequestComments,
             Employee = new Models.LeaveAllocations.EmployeeListVM
             {
                 Id = leaveRequest.EmployeeId,
@@ -144,5 +161,5 @@ public class LeaveRequestsService(IMapper _mapper, UserManager<ApplicationUser> 
         };
 
         return model;
-    }
+    }    
 }
