@@ -60,8 +60,8 @@ namespace LeaveManagementSystem.Web.Services.LeaveAllocations
             {
                 DateOfBirth = user.DateOfBirth,
                 Email = user.Email,
-                Firstname = user.FirstName,
-                Lastname = user.LastName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 Id = user.Id,
                 LeaveAllocations = allocationVmList,
                 IsCompletedAllocation = leaveTypesCount == allocations.Count
