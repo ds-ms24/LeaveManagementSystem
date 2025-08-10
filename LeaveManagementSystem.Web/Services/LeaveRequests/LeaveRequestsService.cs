@@ -138,7 +138,7 @@ public class LeaveRequestsService(IMapper _mapper, UserManager<ApplicationUser> 
     public async Task<ReviewLeaveRequestVM> GetLeaveRequestForReview(int id)
     {
         var leaveRequest = await _context.LeaveRequests
-            .Include(q => q.LeaveTypeId)
+            .Include(q => q.LeaveType)
             .FirstAsync(q => q.Id == id);
         var user = await _userManager.FindByIdAsync(leaveRequest.EmployeeId);
 
@@ -161,5 +161,6 @@ public class LeaveRequestsService(IMapper _mapper, UserManager<ApplicationUser> 
         };
 
         return model;
-    }    
+    }
+    
 }
