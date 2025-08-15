@@ -10,7 +10,8 @@
     <h4 class="alert-heading">Requesting Employee</h4>
     <hr>
     <p>
-        <strong>Employee Name:</strong> @Model.Employee.FirstName @Model.Employee.LastName
+        <strong>Name:</strong> @Model.Employee.FirstName @Model.Employee.LastName
+        <strong>Email:</strong> @Model.Employee.Email
     </p>
     <hr />
 </div>
@@ -76,7 +77,7 @@
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Yes, confirm",
-                cancelButtonText: "No, decline"
+                cancelButtonText: "No, cancel"
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('#leaveRequestId').val(id);
