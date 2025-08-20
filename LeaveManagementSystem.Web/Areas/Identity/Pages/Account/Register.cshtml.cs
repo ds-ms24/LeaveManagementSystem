@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using LeaveManagementSystem.Web.Services.LeaveAllocations;
+using LeaveManagementSystem.Application.Services.LeaveAllocations;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagementSystem.Web.Areas.Identity.Pages.Account;
@@ -82,7 +82,7 @@ public class RegisterModel : PageModel
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
-                
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -109,7 +109,7 @@ public class RegisterModel : PageModel
 
         [Required]
         public string RoleName { get; set; }
-        
+
 
     }
 
