@@ -30,12 +30,11 @@ namespace LeaveManagementSystem.Web.Controllers
         {
             // queries
             // calculations
-
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-            // here it is creating a new object of a class called ErrorViewModel (class can be called whatever you want)
-            // proper naming conventions tells me that this is a ViewModel class designed for a page called Error.
-
-            // Ultimately the Action is preparing this data, or an object of this class as data to be returned with the view.
+            var model = new ErrorViewModel 
+            { 
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier 
+            };
+            return View(model);
 
         }
     }
